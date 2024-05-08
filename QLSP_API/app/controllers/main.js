@@ -1,72 +1,59 @@
-const BASE_URL = "https://66337e2bf7d50bbd9b498fd5.mockapi.io/products"
+const BASE_URL = "https://66337e2bf7d50bbd9b498fd5.mockapi.io/products";
 
-
-
-//  gọi API lấy danh sách sản phẩm
 
 function fetchProducts(){
-    turnOnLoading();
+   
     axios({
-        url: BASE_URL,
+        url:BASE_URL,
         method:"GET",
     }).then(function(response){
         turnOffLoading();
-        renderProduct(response.data);
-        
+        renderProducts(response.data);
     }).catch(function(error){
-        console.log("error",error)
         turnOffLoading();
+        console.log("error",error);
     });
     
 }
-// fetch khi load trang
+
 fetchProducts();
-//  xóa sp
-function xoaItem(id){
+function xoaSP(id){
     turnOnLoading();
     axios({
-        url: `${BASE_URL}/${id}`,
+        url:`${BASE_URL}/${id}`,
         method:"DELETE",
     }).then(function(response){
-        // xóa thành công từ server sẽ nhảy vào then để chạy tiếp
-        // window.location.reload() không được tối ưu
-        // gọi lại api lấy danh sách sản phẩm mới nhất từ server
-        // fetch khi xóa thành công
-       fetchProducts();
-        
-    }).catch(function(error){
+        fetchProducts();
+    }).catch(function(){
         turnOffLoading();
-        console.log("error",error)
-    });
+        console.log("error",error);
+       
+    })
 }
 
-// thêm sp
 function createProducts(){
     var nameSP = document.getElementById("TenSP").value;
-    var giaSP = document.getElementById("GiaSP").value;
-    var hinhSP = document.getElementById("HinhSP").value;
-    var motaSP = document.getElementById("moTaSP").value;
-    var product ={
-        name:nameSP,
-        price:giaSP,
-        img:hinhSP,
-        desc:motaSP,
-    }
+    var priceSP = document.getElementById("GiaSP").value;
+    var imgSP = document.getElementById("HinhSP").value;
+    var descSP = document.getElementById("moTaSP").value;
     axios({
-        url: BASE_URL,
+        url:BASE_URL,
         method:"POST",
-        data:product,
+        data:{
+            name:nameSP,
+            price:priceSP,
+            img:imgSP,
+            desc:descSP,
+        },
     }).then(function(response){
-        // tắt modal sau khi thêm thành công
         $("#myModal").modal("hide");
         fetchProducts();
-    
-    }).catch(function(error){
-        console.log("error",error)
+    }).catch(function(){
         turnOffLoading();
-    });
+        console.log("error",error);
+       
+    })
 }
-
 /*
 *********
 
@@ -92,3 +79,4 @@ function createProducts(){
 // micro task , macro task (độ ưu tiên)
 
 // callback hell
+
